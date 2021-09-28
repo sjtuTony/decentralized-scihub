@@ -42,7 +42,7 @@ jobs:
     needs: [getcid, getcidlength]
     steps:
       - run: |
-          if [ x"${{ needs.getcidlength.outputs.length }}" != x"46" ]; then
+          if [ x"${{ needs.getcidlength.outputs.length }}" = x"46" ]; then
               echo "Get wrong file cid"
               exit 1
           fi
