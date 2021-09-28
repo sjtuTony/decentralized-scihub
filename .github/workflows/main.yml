@@ -42,10 +42,10 @@ jobs:
     needs: [getcid, getcidlength]
     steps:
       - run: |
-        if [ x"${{ needs.getcidlength.outputs.length }}" != x"46" ]; then
-            echo "Get wrong file cid"
-            exit 1
-        fi
+          if [ x"${{ needs.getcidlength.outputs.length }}" != x"46" ]; then
+              echo "Get wrong file cid"
+              exit 1
+          fi
       - uses: crustio/ipfs-crust-action@v2.0.3
         with:
           cid: ${{ needs.getcid.outputs.cid }}
