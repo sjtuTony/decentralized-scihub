@@ -1,5 +1,7 @@
 on:
   pull_request:
+    paths:
+      - 'papers/**'
     branchs:
       - main
 
@@ -38,8 +40,12 @@ jobs:
     name: Upload SCI doc
     runs-on: ubuntu-latest
     needs: [getcid, getcidlength]
-    if: ${{ needs.getcidlength.outputs.length == 46 }}
     steps:
+      - run: |
+        if [ x"${{ needs.getcidlength.outputs.length }}" != x"46" ]; then
+            echo "Get wrong file cid"
+            exit 1
+        fi
       - uses: crustio/ipfs-crust-action@v2.0.3
         with:
           cid: ${{ needs.getcid.outputs.cid }}

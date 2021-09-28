@@ -98,7 +98,7 @@ echo "{\"cid\":\"$ipfsrootcid\",\"size\":$ipfs_root_size,\"links\":$links}" | jq
 if [ -d "$finalparentdir/$ipfsrootcid" ]; then
     rm -rf $finalparentdir/$ipfsrootcid
 fi
-
 mv $finaldir $finalparentdir/$ipfsrootcid
 
+# Pin add
 curl -XPOST "$ipfsurl/pin/add?arg=$ipfsrootcid"
