@@ -22,7 +22,7 @@ jobs:
           info=$(./.github/etc/getInfo.sh "$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)")
           echo "::set-output name=cid::$(echo $info | .github/etc/jq -r .cid)"
           echo "::set-output name=cidLength::$(echo $cid | awk '{print length}')"
-          echo "::set-output name=size::$(echo $cid | awk '{print length}')"
+          echo "::set-output name=size::$(echo $info | .github/etc/jq -r .size)"
 
   upload_sci_doc:
     name: Upload SCI doc
@@ -43,6 +43,7 @@ jobs:
         with:
           cid: ${{ needs.file_info.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
+          file-replica: 15
           max-attempts: 360
       - name: Get file replica
         run: |
