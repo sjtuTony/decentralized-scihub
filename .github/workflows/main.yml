@@ -6,21 +6,21 @@ on:
       - main
 
 jobs:
-  changefiles:
-    runs-on: ubuntu-latest
-    outputs:
-      files: ${{ steps.getchangefiles.outputs.files }}
-    steps:
-      - uses: actions/checkout@v1
-      - id: getchangefiles
-        run: echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
+    #changefiles:
+    #  runs-on: ubuntu-latest
+    #  outputs:
+    #    files: ${{ steps.getchangefiles.outputs.files }}
+    #  steps:
+    #    - uses: actions/checkout@v1
+    #    - id: getchangefiles
+    #      run: echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
 
-  getcid:
+  file_info:
     runs-on: ubuntu-latest
     needs: changefiles
     outputs:
       cid: ${{ steps._getcid.outputs.cid }}
-      length: ${{ steps._getcid.outputs.cidLen }}
+      cidLength: ${{ steps._getcid.outputs.cidLength }}
       size: ${{ steps._getcid.outputs.size }}
     steps:
       - uses: actions/checkout@v1
@@ -28,46 +28,35 @@ jobs:
         run: |
           chmod +x ".github/etc/getInfo.sh"
           chmod +x ".github/etc/jq"
-          info=$(./.github/etc/getInfo.sh "${{ needs.changefiles.outputs.files }}")
+          files=$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)
+          #info=$(./.github/etc/getInfo.sh "${{ needs.changefiles.outputs.files }}")
+          info=$(./.github/etc/getInfo.sh "$files")
           cid=$(echo $info | .github/etc/jq -r .cid)
-          cidLen=$(echo $cid | awk '{print length}')
+          cidLength=$(echo $cid | awk '{print length}')
           size=$(echo $info | .github/etc/jq -r .size)
-          echo "cid:$cid, length:$cidLen, size:$size"
+          echo "cid:$cid, length:$cidLength, size:$size"
           echo "::set-output name=cid::$cid"
-          echo "::set-output name=length::$cidLen"
+          echo "::set-output name=cidLength::$cidLength"
           echo "::set-output name=size::$size"
-          #echo ::set-output name=cid::$(./.github/etc/getCid.sh "${{ needs.changefiles.outputs.files }}")
-          #echo ::set-output name=size::$(./.github/etc/getSize.sh "${{ needs.changefiles.outputs.files }}")
-
-          #getcidlength:
-          #  runs-on: ubuntu-latest
-          #  needs: getcid
-          #  outputs:
-          #    length: ${{ steps._getcidlength.outputs.length }}
-          #  steps:
-          #    - id: _getcidlength
-          #      run: echo "::set-output name=length::$( echo ${{ needs.getcid.outputs.cid }} | awk '{print length}')"
 
   upload_sci_doc:
     name: Upload SCI doc
     runs-on: ubuntu-latest
-    #needs: [getcid, getcidlength]
-    needs: getcid
-    #if: ${{ needs.getcidlength.outputs.length }} == 46
-    if: ${{ needs.getcid.outputs.length }} == 46
+    needs: file_info
+    if: ${{ needs.file_info.outputs.cidLength }} == 46
     steps:
       - uses: crustio/ipfs-crust-action@v2.0.4
         timeout-minutes: 15
         with:
-          cid: ${{ needs.getcid.outputs.cid }}
-          size: ${{ needs.getcid.outputs.size }}
+          cid: ${{ needs.file_info.outputs.cid }}
+          size: ${{ needs.file_info.outputs.size }}
           seeds: ${{ secrets.CRUST_SEEDS }}
       - uses: actions/checkout@v2.1.0
       - name: Crust replicas action
         id: replica
         uses: TonyCode2012/crust-replicas-action@v1.0.0
         with:
-          cid: ${{ needs.getcid.outputs.cid }}
+          cid: ${{ needs.file_info.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
           max-attempts: 2
       - name: Get file replica
