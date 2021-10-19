@@ -25,7 +25,8 @@ jobs:
       - uses: actions/checkout@v1
       - id: _getcid
         run: |
-          chmod +x ".github/etc/getcid.sh"
+          chmod +x ".github/etc/getCid.sh"
+          chmod +x ".github/etc/getSize.sh"
           echo ::set-output name=cid::$(./.github/etc/getCid.sh "${{ needs.changefiles.outputs.files }}")
           echo ::set-output name=size::$(./.github/etc/getSize.sh "${{ needs.changefiles.outputs.files }}")
 
