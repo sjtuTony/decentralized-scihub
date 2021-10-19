@@ -54,12 +54,11 @@ jobs:
       - uses: actions/checkout@v2.1.0
       - name: Crust replicas action
         id: replica
-        uses: crustio/crust-replicas-action@v1.0.2
+        uses: TonyCode2012/crust-replicas-action@v1.0.0
         with:
           cid: ${{ needs.getcid.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
-          max_attemps: 6000
-          on_retry_command: sleep 60
+          max_attemps: 2
       - name: Get file replica
         run: |
             if [ x"${{ steps.replica.outputs.replicaCount }}" = x"0" ]; then
