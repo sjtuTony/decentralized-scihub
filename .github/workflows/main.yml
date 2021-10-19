@@ -20,12 +20,14 @@ jobs:
     needs: changefiles
     outputs:
       cid: ${{ steps._getcid.outputs.cid }}
+      size: ${{ steps._getcid.outputs.size }}
     steps:
       - uses: actions/checkout@v1
       - id: _getcid
         run: |
           chmod +x ".github/etc/getcid.sh"
-          echo ::set-output name=cid::$(./.github/etc/getcid.sh "${{ needs.changefiles.outputs.files }}")
+          echo ::set-output name=cid::$(./.github/etc/getCid.sh "${{ needs.changefiles.outputs.files }}")
+          echo ::set-output name=size::$(./.github/etc/getSize.sh "${{ needs.changefiles.outputs.files }}")
 
   getcidlength:
     runs-on: ubuntu-latest
@@ -42,14 +44,11 @@ jobs:
     needs: [getcid, getcidlength]
     if: ${{ needs.getcidlength.outputs.length }} == 46
     steps:
-        #- run: |
-        #    if [ x"${{ needs.getcidlength.outputs.length }}" != x"46" ]; then
-        #        echo "Get wrong file cid"
-        #        exit 1
-        #    fi
-      - uses: crustio/ipfs-crust-action@v2.0.3
+      - uses: crustio/ipfs-crust-action@v2.0.4
+        timeout-minutes: 15
         with:
           cid: ${{ needs.getcid.outputs.cid }}
+          size: ${{ needs.getcid.outputs.size }}
           seeds: ${{ secrets.CRUST_SEEDS }}
       - uses: actions/checkout@v2.1.0
       - name: Crust replicas action

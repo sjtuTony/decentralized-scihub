@@ -12,10 +12,8 @@ for file in ${files[@]}; do
     if [ x"$dir" = x"$dirtag" ]; then
         filename=$(basename $file)
         if [ x"$filename" = x"$metatag" ]; then
-            cat $file | $JQ -r .cid 2>/dev/null
-            if [ $? -eq 0 ]; then
-                exit 0
-            fi
+            cat $file | $JQ -r .size 2>/dev/null
+            exit 0
         fi
     fi
 done
