@@ -58,11 +58,11 @@ jobs:
         with:
           cid: ${{ needs.getcid.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
-          max_attemps: 2
+          max-attemps: 2
       - name: Get file replica
         run: |
             if [ x"${{ steps.replica.outputs.replicaCount }}" = x"0" ]; then
                 echo "Upload papers failed!"
             else
-                echo "Upload papers successfully!"
+                echo "Upload papers successfully! Replica: ${{ steps.replica.outputs.replicaCount }}"
             fi
