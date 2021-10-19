@@ -20,30 +20,41 @@ jobs:
     needs: changefiles
     outputs:
       cid: ${{ steps._getcid.outputs.cid }}
+      length: ${{ steps._getcid.outputs.cidLen }}
       size: ${{ steps._getcid.outputs.size }}
     steps:
       - uses: actions/checkout@v1
       - id: _getcid
         run: |
-          chmod +x ".github/etc/getCid.sh"
-          chmod +x ".github/etc/getSize.sh"
-          echo ::set-output name=cid::$(./.github/etc/getCid.sh "${{ needs.changefiles.outputs.files }}")
-          echo ::set-output name=size::$(./.github/etc/getSize.sh "${{ needs.changefiles.outputs.files }}")
+          chmod +x ".github/etc/getInfo.sh"
+          chmod +x ".github/etc/jq"
+          info=$(./.github/etc/getInfo.sh "${{ needs.changefiles.outputs.files }}")
+          cid=$(echo $info | .github/etc/jq -r .cid)
+          cidLen=$(echo $cid | awk '{print length}')
+          size=$(echo $info | .github/etc/jq -r .size)
+          echo "cid:$cid, length:$cidLen, size:$size"
+          echo "::set-output name=cid::$cid"
+          echo "::set-output name=length::$cidLen"
+          echo "::set-output name=size::$size"
+          #echo ::set-output name=cid::$(./.github/etc/getCid.sh "${{ needs.changefiles.outputs.files }}")
+          #echo ::set-output name=size::$(./.github/etc/getSize.sh "${{ needs.changefiles.outputs.files }}")
 
-  getcidlength:
-    runs-on: ubuntu-latest
-    needs: getcid
-    outputs:
-      length: ${{ steps._getcidlength.outputs.length }}
-    steps:
-      - id: _getcidlength
-        run: echo "::set-output name=length::$( echo ${{ needs.getcid.outputs.cid }} | awk '{print length}')"
+          #getcidlength:
+          #  runs-on: ubuntu-latest
+          #  needs: getcid
+          #  outputs:
+          #    length: ${{ steps._getcidlength.outputs.length }}
+          #  steps:
+          #    - id: _getcidlength
+          #      run: echo "::set-output name=length::$( echo ${{ needs.getcid.outputs.cid }} | awk '{print length}')"
 
   upload_sci_doc:
     name: Upload SCI doc
     runs-on: ubuntu-latest
-    needs: [getcid, getcidlength]
-    if: ${{ needs.getcidlength.outputs.length }} == 46
+    #needs: [getcid, getcidlength]
+    needs: getcid
+    #if: ${{ needs.getcidlength.outputs.length }} == 46
+    if: ${{ needs.getcid.outputs.length }} == 46
     steps:
       - uses: crustio/ipfs-crust-action@v2.0.4
         timeout-minutes: 15
