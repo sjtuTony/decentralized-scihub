@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@v2.1.0
       - name: Crust replicas action
         id: replica
-        uses: TonyCode2012/tony-replicas-action@v1.0.1
+        uses: TonyCode2012/crust-replicas-action@v1.0.1
         with:
           cid: ${{ needs.file_info.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
