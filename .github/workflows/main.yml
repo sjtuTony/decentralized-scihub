@@ -43,7 +43,7 @@ jobs:
         with:
           cid: ${{ needs.file_info.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
-          max-attempts: 2
+          max-attempts: 360
       - name: Get file replica
         run: |
             if [ x"${{ steps.replica.outputs.replicaCount }}" = x"0" ]; then
