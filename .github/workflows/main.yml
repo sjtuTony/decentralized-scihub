@@ -19,15 +19,10 @@ jobs:
         run: |
           chmod +x ".github/etc/getInfo.sh"
           chmod +x ".github/etc/jq"
-          files=$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)
-          info=$(./.github/etc/getInfo.sh "$files")
-          cid=$(echo $info | .github/etc/jq -r .cid)
-          cidLength=$(echo $cid | awk '{print length}')
-          size=$(echo $info | .github/etc/jq -r .size)
-          echo "cid:$cid, length:$cidLength, size:$size"
-          echo "::set-output name=cid::$cid"
-          echo "::set-output name=cidLength::$cidLength"
-          echo "::set-output name=size::$size"
+          info=$(./.github/etc/getInfo.sh "$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)")
+          echo "::set-output name=cid::$(echo $info | .github/etc/jq -r .cid)"
+          echo "::set-output name=cidLength::$(echo $cid | awk '{print length}')"
+          echo "::set-output name=size::$(echo $cid | awk '{print length}')"
 
   upload_sci_doc:
     name: Upload SCI doc
