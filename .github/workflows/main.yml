@@ -10,12 +10,12 @@ jobs:
   file_info:
     runs-on: ubuntu-latest
     outputs:
-      cid: ${{ steps._getcid.outputs.cid }}
-      cidLength: ${{ steps._getcid.outputs.cidLength }}
-      size: ${{ steps._getcid.outputs.size }}
+      cid: ${{ steps.get_file_info.outputs.cid }}
+      cidLength: ${{ steps.get_file_info.outputs.cidLength }}
+      size: ${{ steps.get_file_info.outputs.size }}
     steps:
       - uses: actions/checkout@v1
-      - id: _getcid
+      - id: get_file_info
         run: |
           chmod +x ".github/etc/getInfo.sh"
           chmod +x ".github/etc/jq"
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2.1.0
       - name: Crust replicas action
         id: replica
-        uses: TonyCode2012/crust-replicas-action@v1.0.3
+        uses: crustio/crust-replicas-action@v1.0.3
         with:
           cid: ${{ needs.file_info.outputs.cid }}
           crust-endpoint: 'wss://rpc.crust.network'
