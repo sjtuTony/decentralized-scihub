@@ -41,7 +41,38 @@
   margin-top: 15px;
   margin-bottom: 15px;
   width: 70%;
-	height: 70%;
+  height: 70%;
+}
+
+.output-img {
+  margin-left: 13%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 70%;
+  height: 70%;
+}
+
+.ipfs-config-img {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  height: 100%;
+}
+
+.output-button {
+  float: right;
+}
+
+.blue-text {
+  color:#1890ff;
+}
+
+.output-button {
+  float: right;
+}
+
+.blue-text {
+  color:#1890ff;
 }
 
 .output-button {
