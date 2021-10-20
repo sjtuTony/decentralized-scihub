@@ -48,7 +48,8 @@ jobs:
       - name: Get file replica
         run: |
             if [ x"${{ steps.replica.outputs.replicaCount }}" = x"0" ]; then
-                echo "Upload papers failed!"
+                echo "Upload papers failed! Please make sure your local IPFS is online and rerun PR"
             else
                 echo "Upload papers successfully! Replica: ${{ steps.replica.outputs.replicaCount }}"
+                exit 1
             fi
