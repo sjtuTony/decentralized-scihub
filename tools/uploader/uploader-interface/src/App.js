@@ -142,8 +142,6 @@ Click the button to make sure ipfs is running properly.
   const [paperList, setPaperList] = React.useState([]);
   const [paperMetadataList, setPaperMetadataList] = React.useState([]);
   const [paperForm] = Form.useForm();
-  const [metaInfo, setMetaInfo] = React.useState({})
-  const [addFileInfo, setAddFileInfo] = React.useState({})
 
   const checkMetadata = (values) => {
     if (values[0] === undefined) {
@@ -470,17 +468,6 @@ During this process, other IPFS nodes will pull files from the local machine. **
         {current === 2 && (<GenerateView />)}
         {current === 3 && (<OutputView />)}
       </div>
-      <Modal
-        title="Upload file"
-        centered
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-      >
-        <p>Adding file:{addFileInfo.addingFile}...</p>
-        <Progress percent={addFileInfo.complete} status="active" />
-      </Modal> 
     </div>
   );
 };
