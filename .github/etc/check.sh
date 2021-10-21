@@ -33,7 +33,7 @@ fi
 cidRoot=${cidArry[0]}
 
 ### Check if paper number is valid
-papers=$(printf '%s\n' "${files[@]}" | grep "papers/$cidRoot/" | grep -v "papers/$cidRoot/meta")
+papers=($(printf '%s\n' "${files[@]}" | grep "papers/$cidRoot/" | grep -v "papers/$cidRoot/meta"))
 papersNum=${#papers[*]}
 echo "papersNum:$papersNum, :${papers[*]}"
 if [ $papersNum -gt $maxNum ] || [ $papersNum -le 0 ]; then
