@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v1
         run: |
           chmod +x ".github/etc/check.sh"
-          ./.github/etc/check.sh "$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
+          ./.github/etc/check.sh "$(git diff --name-only --diff-filter=A ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
           if [ $? -ne 0 ]; then
               exit 1
           fi
