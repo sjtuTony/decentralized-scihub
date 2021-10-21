@@ -15,7 +15,7 @@ function isValidCid()
 ########## MAIN BODY ##########
 basedir=$(cd `dirname $0`;pwd)
 files=($1)
-maxNum=101
+maxNum=100
 maxSize=$((5 * 1024 * 1024 * 1024))
 cidTag='(?<=papers/).*(?=/)'
 JQ=$basedir/jq
@@ -27,7 +27,7 @@ fi
 ### Check if there is only one meta file
 cidArry=($(printf '%s\n' "${files[@]}" | grep -Po $cidTag | sort | uniq))
 if [ ${#cidArry[*]} -ne 1 ]; then
-    echo "Can just upload one Qmxxx folder, but there are two"
+    echo "Can just upload one Qmxxx folder, but there are ${#cidArry[*]}"
     exit 1
 fi
 cidRoot=${cidArry[0]}
@@ -35,6 +35,7 @@ cidRoot=${cidArry[0]}
 ### Check if paper number is valid
 papers=$(printf '%s\n' "${files[@]}" | grep "papers/$cidRoot/" | grep -v "meta")
 papersNum=${#papers[*]}
+echo "papersNum:$papersNum"
 if [ $papersNum -gt $maxNum ] || [ $papersNum -le 0 ]; then
     echo "Upload file number should range (0, $maxNum]"
     exit 1
@@ -72,10 +73,10 @@ for doi in $(cat $metaFile | jq -r '.links|.[]|.doi'); do
 done
 ## Check if size is right
 if [ $totalSizeGet -le $countSize ]; then
-    echo "Wrong final size"
+    echo "file size:$totalSizeGet in meta should be greater than count size:$countSize"
     exit 1
 fi
 if [ $totalSizeGet -gt $maxSize ]; then
-    echo "Total size exceeds $maxSize"
+    echo "Total size:$totalSizeGet exceeds size limit:$maxSize"
     exit 1
 fi
