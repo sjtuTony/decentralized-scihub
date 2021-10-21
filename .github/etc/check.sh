@@ -2,19 +2,25 @@
 function isValidCid()
 {
     local tmpCid=$1
+    local ret=0
     if ! [[ $tmpCid =~ ^Qm ]]; then
-        return 1
+        ret=1
     fi
-    if [ ${#tmpCid} -ne 46 ]; then
-        return 1
+    if [ ${#tmpCid} -ne $cidLength ]; then
+        ret=1
     fi
 
-    return 0
+    if [ $ret -ne 0 ]; then
+        echo "Invalid cid:$tmpCid(Not start with 'Qm' or length not $cidLength)"
+    fi
+
+    return $ret
 }
 
 ########## MAIN BODY ##########
 basedir=$(cd `dirname $0`;pwd)
 files=($1)
+cidLength=46
 maxNum=100
 maxSize=$((5 * 1024 * 1024 * 1024))
 dirTag="papers"
