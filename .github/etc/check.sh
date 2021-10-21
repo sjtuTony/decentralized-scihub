@@ -33,9 +33,9 @@ fi
 cidRoot=${cidArry[0]}
 
 ### Check if paper number is valid
-papers=$(printf '%s\n' "${files[@]}" | grep "papers/$cidRoot/" | grep -v "meta")
+papers=$(printf '%s\n' "${files[@]}" | grep "papers/$cidRoot/" | grep -v "papers/$cidRoot/meta")
 papersNum=${#papers[*]}
-echo "papersNum:$papersNum"
+echo "papersNum:$papersNum, :${papers[*]}"
 if [ $papersNum -gt $maxNum ] || [ $papersNum -le 0 ]; then
     echo "Upload file number should range (0, $maxNum]"
     exit 1
