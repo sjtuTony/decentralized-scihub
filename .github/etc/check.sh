@@ -38,6 +38,7 @@ if [ ${#cidArry[*]} -ne 1 ]; then
     exit 1
 fi
 cidRoot=${cidArry[0]}
+isValidCid $cidRoot || { exit 1; }
 
 ### Check if paper number is valid
 papers=($(printf '%s\n' "${files[@]}" | grep "$dirTag/$cidRoot/" | grep -v "$dirTag/$cidRoot/meta"))
