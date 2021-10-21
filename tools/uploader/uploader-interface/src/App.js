@@ -5,6 +5,7 @@ import { Steps, Button, Upload, message, Table, Input, Progress, Form } from 'an
 import ReactMarkdown from 'react-markdown';
 import overviewImgUrl from './pic/overview.png';
 import outputImgUrl from './pic/output.png';
+import passCdImgUrl from './pic/pass-cd.png';
 import ipfsConfigImgUrl from './pic/ipfs-config.png';
 import FileSaver from 'file-saver';
 import JsZip from 'jszip'
@@ -403,18 +404,20 @@ Check the output content and click the download button to download the compresse
   const dowloadViewMarkdown2 = `
 - Create new branch and send pull request
 
-## 3 Wait CI pass (DO NOT CLOSE IPFS)
-After the PR is issued, the background CI will store the papers on Crust. This will take some time, usually around 1 hour to 2 hours.
+## 3 Wait CD pass (DO NOT CLOSE IPFS)
+Wait for the PR to be approved by the admins and merged into repository, and the background CD will store the papers on Crust. This will take some time, usually around 2 hours to 3 hours.
 
-During this process, other IPFS nodes will pull files from the local machine. **Please ensure that the local network is smooth and keep the local IPFS online.** When the number of copies reaches a certain number, CI can be passed, which means that the papers is stored successfully.
+During this process, other IPFS nodes will pull files from the local machine. **Please ensure that the local network is smooth and keep the local IPFS online.** When the number of copies reaches a certain number, CD will be passed, which means that the papers is stored successfully.
+`
 
+  const dowloadViewMarkdown3 = `
 ## 4 Output information
 `
   const downloadFile = () => {
     const zip = new JsZip();
     resultFiles.forEach((item) => {
       let blob = new Blob([item.content], { type: "text/plain;charset=utf-8" });
-      zip.file(item.path, blob);
+      zip.file(item.path.replace('/', '%'), blob);
     });
     zip.generateAsync({ type: "blob" }).then(function (content) {
       FileSaver.saveAs(content, resultRoot);
@@ -428,6 +431,8 @@ During this process, other IPFS nodes will pull files from the local machine. **
           <ReactMarkdown linkTarget="_blank">{dowloadViewMarkdown1}</ReactMarkdown>
           <img className="output-img" src={outputImgUrl} alt="output" />
           <ReactMarkdown linkTarget="_blank">{dowloadViewMarkdown2}</ReactMarkdown>
+          <img className="pass-cd-img" src={passCdImgUrl} alt="output" />
+          <ReactMarkdown linkTarget="_blank">{dowloadViewMarkdown3}</ReactMarkdown>
           <font size="4">Root: {resultRoot}</font>
           <Button className="output-button" type="primary" onClick={() => downloadFile()}>
             Save output
