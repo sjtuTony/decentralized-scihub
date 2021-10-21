@@ -23,6 +23,7 @@ jobs:
           cid=$(echo $info | .github/etc/jq -r .cid)
           cidLength=$(echo $cid | awk '{print length}')
           size=$(echo $info | .github/etc/jq -r .size)
+          echo "cid:$cid, cidLength:$cidLength, size:$size"
           echo "::set-output name=cid::$cid"
           echo "::set-output name=cidLength::$cidLength"
           echo "::set-output name=size::$size"
