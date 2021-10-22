@@ -71,6 +71,7 @@ if [ ! -f $metaFile ]; then
 fi
 declare -A doi2cid
 for line in $(cat $metaFile | $JQ -c '.links|.[]'); do
+    echo "line:$line"
     doi=$(echo $line | $JQ -r .doi)
     isValidDoi $doi || { exit 1; }
     cid=$(echo $line | $JQ -r .cid)
