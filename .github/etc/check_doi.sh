@@ -42,8 +42,6 @@ dirTag="papers"
 cidTag='(?<=papers/).*(?=/)'
 JQ=$basedir/jq
 
-echo "files:${files[@]}"
-
 if [ ! -f "$JQ" ]; then 
     exit 1
 fi
@@ -79,6 +77,7 @@ for line in $(cat $metaFile | $JQ -c '.links|.[]'); do
     isValidCid $cid || { exit 1; }
     doi2cid[$doi]=$cid
 done
+echo "doi2cid:${!doi2cid[@]}, value:${doi2cid[@]}"
 if [ ${#doi2cid[@]} -ne ${#papers[@]} ]; then
     echo "Meta file links doi and papers number don't match"
     exit 1
