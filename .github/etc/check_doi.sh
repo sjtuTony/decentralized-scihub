@@ -88,7 +88,7 @@ for file in ${papers[@]}; do
     isValidCid $cid || { exit 1; }
     subCid=${doi2cid[$doi]}
     if [ x"$subCid" = x"" ]; then
-        echo "Cannot find cid with doi:$doi in meta file"
+        echo "Cannot find cid with doi:'$doi' in meta file"
         exit 1
     fi
     if [ x"$cid" != x"$subCid" ]; then
