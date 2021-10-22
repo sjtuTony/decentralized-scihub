@@ -88,7 +88,7 @@ for file in ${papers[@]}; do
     isValidCid $cid || { exit 1; }
     subCid=${doi2cid[$doi]}
     if [ x"$cid" != x"$subCid" ]; then
-        echo "cid:$cid in file($doi) not equal to meta links cid:$subCid"
+        echo "cid:'$cid' in file($doi) and meta links cid:'$subCid' don't match"
         exit 1
     fi
 done
