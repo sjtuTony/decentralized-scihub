@@ -87,8 +87,8 @@ for file in ${papers[@]}; do
     cid=$(cat $file | $JQ -r .cid)
     isValidCid $cid || { exit 1; }
     subCid=${doi2cid[$doi]}
-    if [ x"$cid" != $subCid ]; then
-        echo "file:$doi cid:$cid not equal to meta links cid:$subCid"
+    if [ x"$cid" != x"$subCid" ]; then
+        echo "cid:$cid in file($doi) not equal to meta links cid:$subCid"
         exit 1
     fi
 done
