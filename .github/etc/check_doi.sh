@@ -87,6 +87,10 @@ for file in ${papers[@]}; do
     cid=$(cat $file | $JQ -r .cid)
     isValidCid $cid || { exit 1; }
     subCid=${doi2cid[$doi]}
+    if [ x"$subCid" = x"" ]; then
+        echo "Cannot find cid with doi:$doi in meta file"
+        exit 1
+    fi
     if [ x"$cid" != x"$subCid" ]; then
         echo "cid:'$cid' in file($doi) and meta links cid:'$subCid' don't match"
         exit 1
