@@ -76,8 +76,14 @@ if [ ${#subDois[@]} -ne ${#papers[@]} ]; then
 fi
 for file in ${papers[@]}; do
     doi=$(basename $file)
-    isValidDoi $doi || { exit 1; }
+    if ! isValidDoi $doi; then
+        echo "Invalid file doi:$doi"
+        exit 1
+    fi
 done
 for doi in ${subDois[@]}; do
-    isValidDoi $doi || { exit 1; }
+    if ! isValidDoi $doi; then
+        echo "Invalid meta links doi:$doi"
+        exit 1
+    fi
 done
