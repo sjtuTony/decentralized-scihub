@@ -2,7 +2,7 @@
 function isValidDoi()
 {
     local tmpDoi=$1
-    if [ x"$tmpDoi" != x"" ] && [[ $tmpDoi =~ 10.[0-9]{4,9}%[-._\;()/:a-z0-9A-Z]+ ]]; then
+    if [ x"$tmpDoi" != x"" ] && [[ $tmpDoi =~ 10.[0-9]{4,9}/[-._\;()/:a-z0-9A-Z]+ ]]; then
         return 0
     fi
 
