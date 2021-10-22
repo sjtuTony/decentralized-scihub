@@ -42,6 +42,8 @@ dirTag="papers"
 cidTag='(?<=papers/).*(?=/)'
 JQ=$basedir/jq
 
+echo "files:${files[@]}"
+
 if [ ! -f "$JQ" ]; then 
     exit 1
 fi
