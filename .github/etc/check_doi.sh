@@ -83,6 +83,7 @@ if [ ${#doi2cid[@]} -ne ${#papers[@]} ]; then
 fi
 for file in ${papers[@]}; do
     doi=$(basename $file)
+    doi=${doi/\%/\/}
     isValidDoi $doi || { exit 1; }
     cid=$(cat $file | $JQ -r .cid)
     isValidCid $cid || { exit 1; }
