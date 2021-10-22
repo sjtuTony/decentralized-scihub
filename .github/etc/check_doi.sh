@@ -69,21 +69,26 @@ if [ ! -f $metaFile ]; then
     echo "Meta file not found!"
     exit 1
 fi
-subDois=($(cat $metaFile | $JQ -r '.links|.[]|.doi'))
-if [ ${#subDois[@]} -ne ${#papers[@]} ]; then
+declare -A doi2cid
+for line in $(cat $metaFile | $JQ -c '.links|.[]'); do
+    doi=$(echo $line | $JQ -r .doi)
+    isValidDoi $doi || { exit 1; }
+    cid=$(echo $line | $JQ -r .cid)
+    isValidCid $cid || { exit 1; }
+    doi2cid[$doi]=$cid
+done
+if [ ${#doi2cid[@]} -ne ${#papers[@]} ]; then
     echo "Meta file links doi and papers number don't match"
     exit 1
 fi
 for file in ${papers[@]}; do
     doi=$(basename $file)
-    if ! isValidDoi $doi; then
-        echo "Invalid file doi:$doi"
-        exit 1
-    fi
-done
-for doi in ${subDois[@]}; do
-    if ! isValidDoi $doi; then
-        echo "Invalid meta links doi:$doi"
+    isValidDoi $doi || { exit 1; }
+    cid=$(cat $file | $JQ -r .cid)
+    isValidCid $cid || { exit 1; }
+    subCid=${doi2cid[$doi]}
+    if [ x"$cid" != $subCid ]; then
+        echo "file:$doi cid:$cid not equal to meta links cid:$subCid"
         exit 1
     fi
 done
