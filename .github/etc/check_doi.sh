@@ -71,14 +71,12 @@ if [ ! -f $metaFile ]; then
 fi
 declare -A doi2cid
 for line in $(cat $metaFile | $JQ -c '.links|.[]'); do
-    echo "line:$line"
     doi=$(echo $line | $JQ -r .doi)
     isValidDoi $doi || { exit 1; }
     cid=$(echo $line | $JQ -r .cid)
     isValidCid $cid || { exit 1; }
     doi2cid[$doi]=$cid
 done
-echo "doi2cid:${!doi2cid[@]}, value:${doi2cid[@]}"
 if [ ${#doi2cid[@]} -ne ${#papers[@]} ]; then
     echo "Meta file links doi and papers number don't match"
     exit 1
